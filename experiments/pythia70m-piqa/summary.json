@@ -1,0 +1,70 @@
+{
+  "selected": "swap23_0.05",
+  "challenger": "swap23_0.05",
+  "calibration": {
+    "identity": {
+      "acc": 0.56640625,
+      "acc_norm": 0.58984375,
+      "n": 256
+    },
+    "swap23_0.01": {
+      "acc": 0.57421875,
+      "acc_norm": 0.58984375,
+      "n": 256
+    },
+    "swap23_0.05": {
+      "acc": 0.5859375,
+      "acc_norm": 0.59375,
+      "n": 256
+    },
+    "swap23_0.1": {
+      "acc": 0.60546875,
+      "acc_norm": 0.5859375,
+      "n": 256
+    },
+    "shift_neighbors_0.01": {
+      "acc": 0.58984375,
+      "acc_norm": 0.59375,
+      "n": 256
+    },
+    "shift_neighbors_0.05": {
+      "acc": 0.58203125,
+      "acc_norm": 0.578125,
+      "n": 256
+    },
+    "shift_neighbors_0.1": {
+      "acc": 0.5390625,
+      "acc_norm": 0.54296875,
+      "n": 256
+    }
+  },
+  "heldout": {
+    "identity": {
+      "acc": 0.5984766050054406,
+      "acc_norm": 0.5919477693144722,
+      "n": 1838
+    },
+    "swap23_0.05": {
+      "acc": 0.5935799782372143,
+      "acc_norm": 0.5826985854189336,
+      "n": 1838
+    }
+  },
+  "paired": {
+    "delta_acc_norm": -0.009249183895538629,
+    "bootstrap95": [
+      -0.017954298150163223,
+      -0.000544069640914037
+    ],
+    "wins": 24,
+    "losses": 41,
+    "bootstrap_unit": "example; article/source correlations not controlled"
+  },
+  "source_cache_files_unchanged": 16,
+  "versions": {
+    "torch": "2.10.0+cpu",
+    "transformers": "4.57.6",
+    "safetensors": "0.7.0",
+    "numpy": "2.2.6"
+  }
+}
