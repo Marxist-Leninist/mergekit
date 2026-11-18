@@ -1,0 +1,31 @@
+{
+  "model": "EleutherAI/pythia-70m",
+  "revision": "a39f36b100fe8a5377810d56c3f4789b9c53ac42",
+  "license": "Apache-2.0",
+  "threads": 2,
+  "dtype": "float32",
+  "context": 2048,
+  "selection": "first 256 PIQA training examples only",
+  "heldout": "all 1838 official validation examples; evaluate once after selection",
+  "metric": "zero-shot acc and acc_norm (solution character count), lm-eval v0.3 PIQA format",
+  "candidates": [
+    "identity",
+    "swap23_0.01",
+    "swap23_0.05",
+    "swap23_0.1",
+    "shift_neighbors_0.01",
+    "shift_neighbors_0.05",
+    "shift_neighbors_0.1"
+  ],
+  "weight_training_updates": 0,
+  "torch": "2.10.0+cu128",
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "data_sha256": {
+    "train.jsonl": "f805f9c96518d7b59f2f870d90f712457cda949979469d9fa3fd706ce22e0a1a",
+    "train-labels.lst": "df8ae080c41f02f88e81f6932d425f4b7ee72f433ad552e6a30d45e358e8f8bb",
+    "valid.jsonl": "93503cc97c679e459b065c3d13e848282e44b2a25213985bed3e5d458abef72d",
+    "valid-labels.lst": "b4192dc3a2a0363d9d60ccf79800cbbe2f32ebb17726efdde6970e0b8131bceb"
+  },
+  "parameters": 70426624,
+  "layers": 6
+}
