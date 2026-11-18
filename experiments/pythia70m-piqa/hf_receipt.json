@@ -1,0 +1,8 @@
+{
+  "repo": "ScAGI/pythia-70m-layerblend-piqa-negative-result",
+  "url": "https://huggingface.co/ScAGI/pythia-70m-layerblend-piqa-negative-result",
+  "commit": "ee39919bcf5be04d03846ab0698998e50ab9add8",
+  "private": false,
+  "checkpoint_sha256": "f2f5cee37cce6fb8d19a415f772d2f41f6dcff2afac795ba79ecab67baf6995b",
+  "roundtrip_verified": true
+}
