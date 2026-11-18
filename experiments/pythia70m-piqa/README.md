@@ -50,3 +50,7 @@ Runtime: Torch 2.10.0+cpu, Transformers 4.57.6, safetensors 0.7.0, NumPy 2.2.6. 
 Layer interpolation is a valid weight-editing experiment, but this result **does not improve Pythia**. Shape compatibility and a small calibration gain are inadequate selection evidence. A future independent run should use larger calibration data, stronger uncertainty thresholds, and representation-aligned donors before another untouched evaluation. This dataset is now observed and must not be portrayed as fresh confirmation after further tuning.
 
 The checkpoint is an explicitly labelled **negative-result research artifact**, not a recommended replacement or state-of-the-art model. Original Pythia limitations, biases and license apply. No new general-purpose capability is claimed.
+
+## Published checkpoint
+
+[ScAGI/pythia-70m-layerblend-piqa-negative-result](https://huggingface.co/ScAGI/pythia-70m-layerblend-piqa-negative-result), public commit `ee39919bcf5be04d03846ab0698998e50ab9add8`. Downloaded back at that revision and SHA-256 verified. This is the regressed experimental challenger, not a recommended model.
