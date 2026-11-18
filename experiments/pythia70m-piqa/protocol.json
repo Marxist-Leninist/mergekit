@@ -5,7 +5,7 @@
   "threads": 2,
   "dtype": "float32",
   "context": 2048,
-  "selection": "first 256 PIQA training examples only",
+  "selection": "first 256 PIQA training examples with goals absent from official validation; no heldout labels used",
   "heldout": "all 1838 official validation examples; evaluate once after selection",
   "metric": "zero-shot acc and acc_norm (solution character count), lm-eval v0.3 PIQA format",
   "candidates": [
