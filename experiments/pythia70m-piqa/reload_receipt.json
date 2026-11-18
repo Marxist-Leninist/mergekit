@@ -1,0 +1,5 @@
+{
+  "checkpoint_reconstructs_exact_merge": true,
+  "max_logit_error": 0.0,
+  "tensor_count": 76
+}
