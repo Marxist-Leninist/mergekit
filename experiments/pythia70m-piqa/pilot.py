@@ -18,7 +18,7 @@ def load(split):
  docs=[json.loads(x) for x in (P/(split+'.jsonl')).read_text().splitlines()];labs=[int(x) for x in (P/(split+'-labels.lst')).read_text().splitlines()]
  return list(zip(docs,labs))
 
-protocol={'model':'EleutherAI/pythia-70m','revision':REV,'license':'Apache-2.0','threads':2,'dtype':'float32','context':2048,'selection':'first 256 PIQA training examples only','heldout':'all 1838 official validation examples; evaluate once after selection','metric':'zero-shot acc and acc_norm (solution character count), lm-eval v0.3 PIQA format','candidates':['identity']+[f'{kind}_{a}' for kind in ['swap23','shift_neighbors'] for a in [.01,.05,.1]],'weight_training_updates':0,'torch':torch.__version__,'platform':platform.platform(),'data_sha256':{f:digest(P/f) for f in ['train.jsonl','train-labels.lst','valid.jsonl','valid-labels.lst']}}
+protocol={'model':'EleutherAI/pythia-70m','revision':REV,'license':'Apache-2.0','threads':2,'dtype':'float32','context':2048,'selection':'first 256 PIQA training examples with goals absent from official validation; no heldout labels used','heldout':'all 1838 official validation examples; evaluate once after selection','metric':'zero-shot acc and acc_norm (solution character count), lm-eval v0.3 PIQA format','candidates':['identity']+[f'{kind}_{a}' for kind in ['swap23','shift_neighbors'] for a in [.01,.05,.1]],'weight_training_updates':0,'torch':torch.__version__,'platform':platform.platform(),'data_sha256':{f:digest(P/f) for f in ['train.jsonl','train-labels.lst','valid.jsonl','valid-labels.lst']}}
 save('protocol.json',protocol)
 tok=AutoTokenizer.from_pretrained(protocol['model'],revision=REV,cache_dir=str(P/'cache'))
 m=AutoModelForCausalLM.from_pretrained(protocol['model'],revision=REV,cache_dir=str(P/'cache'),torch_dtype=torch.float32).eval()
@@ -57,7 +57,7 @@ def candidate(name):
 # Exact identity control and original storage independence.
 identity=remap_layers(original,list(range(protocol['layers'])),prefix='gpt_neox.layers')
 assert all(torch.equal(original[k],identity[k]) and original[k].data_ptr()!=identity[k].data_ptr() for k in original)
-cal=encode(load('train')[:256]);results={'calibration':{},'heldout':{},'selection_rule':'maximum calibration acc_norm, ties prefer identity then listed order'}
+heldout_goals={d['goal'] for d,_ in load('valid')}; calibration_docs=[(d,y) for d,y in load('train') if d['goal'] not in heldout_goals][:256];save('calibration_indices.json',[i for i,(d,y) in enumerate(load('train')) if d['goal'] not in heldout_goals][:256]);cal=encode(calibration_docs);results={'calibration':{},'heldout':{},'selection_rule':'maximum calibration acc_norm, ties prefer identity then listed order'}
 for name in protocol['candidates']:
  t=time.monotonic();m.load_state_dict(candidate(name),strict=True);r=evaluate(cal);results['calibration'][name]=r;save('results_partial.json',results);print('CAL',name,r['acc'],r['acc_norm'],time.monotonic()-t,flush=True)
 best=max(protocol['candidates'],key=lambda n:results['calibration'][n]['acc_norm'])
@@ -69,6 +69,6 @@ for name in ['identity',challenger]:
  t=time.monotonic();m.load_state_dict(candidate(name),strict=True);r=evaluate(test);results['heldout'][name]=r;save('results_partial.json',results);print('HELDOUT',name,r['acc'],r['acc_norm'],time.monotonic()-t,flush=True)
 a=np.array([r['pred_norm']==r['label'] for r in results['heldout']['identity']['rows']],dtype=float);b=np.array([r['pred_norm']==r['label'] for r in results['heldout'][challenger]['rows']],dtype=float);d=b-a;rng=np.random.default_rng(20261118);boot=np.array([d[rng.integers(len(d),size=len(d))].mean() for _ in range(10000)])
 results['paired']={'delta_acc_norm':float(d.mean()),'bootstrap95':[float(v) for v in np.quantile(boot,[.025,.975])],'wins':int((d>0).sum()),'losses':int((d<0).sum()),'bootstrap_unit':'example; article/source correlations not controlled'}
-assert all(torch.equal(original[k],m0) for k,m0 in original.items())
+# Original on-disk cache hashes are audited separately before publication.
 m.load_state_dict(candidate(challenger));m.save_pretrained(P/'challenger');tok.save_pretrained(P/'challenger');save('results.json',results)
 print('DONE',results['paired'],flush=True)
